@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaylo · Tour Program (Mockup)</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --ink:#1f2937; --muted:#6b7280;
+    --line:#e5e7eb; --brand:#1d4ed8; --brand-soft:#eef2ff;
+    --green:#059669; --green-soft:#ecfdf5;
+    --amber:#b45309; --amber-soft:#fffbeb;
+    --red:#dc2626; --red-soft:#fef2f2;
+    --slate:#475569; --slate-soft:#f1f5f9;
+    --radius:12px; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.1);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1280px;margin:0 auto;padding:20px}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .between{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  h1{font-size:20px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin-top:2px}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer;color:var(--ink)}
+  .btn:hover{background:#f8fafc}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .pad{padding:16px}
+
+  /* meta strip */
+  .meta{display:grid;grid-template-columns:repeat(8,1fr);gap:0;margin:16px 0}
+  .meta .cell{padding:10px 14px;border-right:1px solid var(--line)}
+  .meta .cell:last-child{border-right:none}
+  .meta .k{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .meta .v{font-weight:600;margin-top:3px}
+
+  /* confirmation overview */
+  .overview{margin:16px 0}
+  .ov-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:14px}
+  .stat{padding:14px 16px;border-radius:10px;border:1px solid var(--line)}
+  .stat .n{font-size:24px;font-weight:700;line-height:1}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:5px}
+  .stat.ok{background:var(--green-soft);border-color:#a7f3d0}
+  .stat.pend{background:var(--amber-soft);border-color:#fde68a}
+  .stat.not{background:var(--slate-soft);border-color:#cbd5e1}
+  .stat.over{background:var(--red-soft);border-color:#fecaca}
+  .progress{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin-top:10px;display:flex}
+  .progress i{display:block;height:100%}
+  .progress .pg{background:var(--green)}
+  .progress .pa{background:#f59e0b}
+  .progress .ps{background:#94a3b8}
+  .legend{display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+  /* alerts */
+  .alerts{margin:16px 0;border-left:4px solid var(--red);background:var(--red-soft)}
+  .alerts h3{margin:0 0 6px;font-size:13px;color:var(--red)}
+  .alert-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed #fecaca;font-size:13px}
+  .alert-item:first-of-type{border-top:none}
+  .alert-item .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px}
+  .tag.deadline{background:#fee2e2;color:#991b1b}
+  .tag.chase{background:#fef3c7;color:#92400e}
+  .tag.pax{background:#dbeafe;color:#1e40af}
+  .alert-item .act{margin-left:auto}
+
+  /* filters */
+  .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
+  .filters select,.filters input{border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:13px;background:#fff}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer}
+  .chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+  .chip.warn.active{background:var(--red);border-color:var(--red)}
+
+  /* day + table */
+  .day{margin:18px 0}
+  .day-head{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#0f172a;color:#fff;border-radius:10px 10px 0 0}
+  .day-num{width:26px;height:26px;border-radius:50%;background:#fff;color:#0f172a;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .day-head .dh-sub{margin-left:auto;font-size:12px;color:#cbd5e1}
+  table{width:100%;border-collapse:collapse;background:#fff;font-size:13px}
+  th{ text-align:left;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .act-name{font-weight:600}
+  .act-desc{color:var(--muted);font-size:12px;margin-top:2px}
+  .loc{color:var(--slate)}
+  .time{font-variant-numeric:tabular-nums;font-weight:600}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .b-conf{background:var(--green-soft);color:var(--green)}
+  .b-pend{background:var(--amber-soft);color:var(--amber)}
+  .b-not{background:var(--slate-soft);color:var(--slate)}
+  .b-canc{background:var(--red-soft);color:var(--red)}
+
+  .ref{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--slate)}
+  .link{color:var(--brand);cursor:pointer;font-size:12.5px}
+  .muted{color:var(--muted)}
+  .stamp{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .deadline-cell .d{font-weight:600}
+  .deadline-cell.soon .d{color:var(--red)}
+  .deadline-cell.ok .d{color:var(--green)}
+
+  .log{font-size:12px;color:var(--brand);cursor:pointer}
+  .pax-flag{display:inline-block;margin-top:4px;font-size:11px;background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:6px}
+  .reconf{display:inline-block;margin-top:4px;font-size:11px;background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:6px}
+
+  tr.cancelled td{background:#fafafa;color:#9ca3af}
+  tr.cancelled .act-name{text-decoration:line-through}
+  .cancel-note{font-size:11px;color:var(--red)}
+
+  .contingency{margin-top:6px;font-size:11.5px;color:var(--slate);background:var(--slate-soft);padding:4px 8px;border-radius:6px;display:inline-block}
+
+  .note{font-size:12px;color:var(--muted)}
+  .footer{margin:26px 0 10px;color:var(--muted);font-size:12px;text-align:center}
+  .legend-key{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="between">
+    <div>
+      <h1>Program — Alpine Adventure 2024</h1>
+      <div class="sub">Manage activities, suppliers, and confirmations</div>
+    </div>
+    <div class="row">
+      <button class="btn">Load Template</button>
+      <button class="btn">Day Program</button>
+      <button class="btn">Print Vouchers <span class="note">(confirmed only)</span></button>
+      <button class="btn primary">+ Add Activity</button>
+    </div>
+  </div>
+
+  <!-- META STRIP -->
+  <div class="card meta">
+    <div class="cell"><div class="k">Tour Code</div><div class="v">AA-2024-06</div></div>
+    <div class="cell"><div class="k">Status</div><div class="v">Planning</div></div>
+    <div class="cell"><div class="k">Dates</div><div class="v">Jun 15 – 21, 2024</div></div>
+    <div class="cell"><div class="k">PAX</div><div class="v">18 <span class="muted">/ 6</span></div></div>
+    <div class="cell"><div class="k">Waitlist</div><div class="v">3</div></div>
+    <div class="cell"><div class="k">Base Price</div><div class="v">USD 2 850</div></div>
+    <div class="cell"><div class="k">Responsible</div><div class="v">Sarah Johnson</div></div>
+    <div class="cell"><div class="k">Tour Guide</div><div class="v">Maria Schmidt</div></div>
+  </div>
+
+  <!-- FIX 1: CONFIRMATION OVERVIEW -->
+  <div class="card pad overview">
+    <div class="between">
+      <strong>Confirmation overview</strong>
+      <span class="note">18 activities across 7 days · departure in 17 days</span>
+    </div>
+    <div class="ov-grid" style="margin-top:12px">
+      <div class="stat">
+        <div class="n">61%</div>
+        <div class="l">confirmed &mdash; 11 of 18 activities</div>
+        <div class="progress">
+          <i class="pg" style="width:61%"></i>
+          <i class="pa" style="width:22%"></i>
+          <i class="ps" style="width:17%"></i>
+        </div>
+        <div class="legend">
+          <span><span class="dot" style="background:var(--green)"></span>Confirmed 11</span>
+          <span><span class="dot" style="background:#f59e0b"></span>Pending 4</span>
+          <span><span class="dot" style="background:#94a3b8"></span>Not sent 3</span>
+        </div>
+      </div>
+      <div class="stat ok"><div class="n">11</div><div class="l">Confirmed</div></div>
+      <div class="stat pend"><div class="n">4</div><div class="l">Pending reply</div></div>
+      <div class="stat not"><div class="n">3</div><div class="l">Not sent</div></div>
+      <div class="stat over"><div class="n">2</div><div class="l">Needs action</div></div>
+    </div>
+  </div>
+
+  <!-- FIX 2: ALERTS / DEADLINES / CHASING / PAX -->
+  <div class="card pad alerts">
+    <h3>Needs your attention</h3>
+    <div class="alert-item">
+      <span class="tag deadline">CANCEL DEADLINE</span>
+      <span>Free-cancellation deadline for <strong>Mount Pilatus Excursion</strong> is in 2 days (Jun 1) — still not confirmed.</span>
+      <span class="act"><button class="btn">Review</button></span>
+    </div>
+    <div class="alert-item">
+      <span class="tag chase">NO REPLY</span>
+      <span>Request to <strong>Lucerne Guides</strong> sent Apr 13 — no response after 14 days.</span>
+      <span class="act"><button class="btn">Send follow-up</button></span>
+    </div>
+    <div class="alert-item">
+      <span class="tag pax">PAX CHANGED</span>
+      <span>Group grew 16 → 18 after confirmation. <strong>2 confirmed activities</strong> need re-confirmation at new pax count.</span>
+      <span class="act"><button class="btn">View affected</button></span>
+    </div>
+  </div>
+
+  <!-- FILTERS incl. needs-action -->
+  <div class="filters">
+    <span class="muted">Filter:</span>
+    <select><option>All Suppliers</option></select>
+    <select><option>All Statuses</option></select>
+    <input placeholder="Search activity…" />
+    <span style="margin:0 4px;color:var(--line)">|</span>
+    <span class="chip active">All</span>
+    <span class="chip warn">Needs action (2)</span>
+    <span class="chip">Pending (4)</span>
+    <span class="chip">Not sent (3)</span>
+    <span class="chip">Confirmed (11)</span>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="day">
+    <div class="day-head">
+      <span class="day-num">1</span>
+      <strong>Day 1 — Saturday, June 15, 2024</strong>
+      <span class="dh-sub">2 activities · 2 confirmed</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th><th>Supplier / Activity</th><th>Location</th><th>PAX</th>
+          <th>Status</th><th>Confirmation</th><th>Request</th><th>Response</th><th>Cancel by</th><th>Log / Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time">10:00</td>
+          <td>
+            <div class="muted" style="font-size:12px">Swiss Transfer Co.</div>
+            <div class="act-name">Airport Transfer &amp; Hotel Check-in</div>
+            <div class="act-desc">Pick up guests from Zurich Airport and transfer to hotel</div>
+          </td>
+          <td class="loc">Zurich</td>
+          <td>18 <span class="pax-flag">matches</span></td>
+          <td><span class="badge b-conf">● Confirmed</span></td>
+          <td><span class="ref">STC-2024-0615</span></td>
+          <td><span class="muted">Sent</span><div class="stamp">Apr 5, 11:00</div></td>
+          <td><span class="link">View response</span><div class="stamp">Apr 8, 16:15</div></td>
+          <td class="deadline-cell ok"><div class="d">Jun 8</div><div class="stamp">10 days left</div></td>
+          <td><span class="log">💬 4 messages</span><div class="note">Confirm flight arrival times 48h before</div></td>
+        </tr>
+        <tr>
+          <td class="time">19:00</td>
+          <td>
+            <div class="muted" style="font-size:12px">Zeughauskeller Restaurant</div>
+            <div class="act-name">Welcome Dinner</div>
+            <div class="act-desc">Traditional Swiss dinner at Zeughauskeller</div>
+          </td>
+          <td class="loc">Zurich Old Town</td>
+          <td>18 <span class="reconf">re-confirm: was 16</span></td>
+          <td><span class="badge b-pend">● Pending</span></td>
+          <td><span class="muted">—</span></td>
+          <td><span class="muted">Sent</span><div class="stamp">Apr 8, 13:00</div></td>
+          <td><span class="link">View response</span><div class="stamp">Apr 9, 18:00</div></td>
+          <td class="deadline-cell ok"><div class="d">Jun 10</div></td>
+          <td><span class="log">💬 2 messages</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day">
+    <div class="day-head">
+      <span class="day-num">2</span>
+      <strong>Day 2 — Sunday, June 16, 2024</strong>
+      <span class="dh-sub">2 activities · 1 confirmed · 1 needs action</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th><th>Supplier / Activity</th><th>Location</th><th>PAX</th>
+          <th>Status</th><th>Confirmation</th><th>Request</th><th>Response</th><th>Cancel by</th><th>Log / Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time">08:30</td>
+          <td>
+            <div class="muted" style="font-size:12px">Swiss Federal Railways</div>
+            <div class="act-name">Scenic Train to Lucerne</div>
+            <div class="act-desc">First-class train journey with panoramic views</div>
+          </td>
+          <td class="loc">Zurich HB → Lucerne</td>
+          <td>18 <span class="reconf">re-confirm: was 16</span></td>
+          <td><span class="badge b-conf">● Confirmed</span></td>
+          <td><span class="ref">SBB-GRP-45821</span></td>
+          <td><span class="muted">Sent</span><div class="stamp">Apr 10, 16:30</div></td>
+          <td><span class="link">View response</span><div class="stamp">Apr 11, 12:00</div></td>
+          <td class="deadline-cell ok"><div class="d">Jun 9</div></td>
+          <td><span class="log">💬 3 messages</span></td>
+        </tr>
+        <!-- FIX: impossible state blocked. Not-sent can't have a response. Flagged as needs action. -->
+        <tr>
+          <td class="time">14:00</td>
+          <td>
+            <div class="muted" style="font-size:12px">Pilatus Bahnen</div>
+            <div class="act-name">Mount Pilatus Excursion</div>
+            <div class="act-desc">Cable car to summit with guided tour</div>
+            <span class="contingency">⛅ Backup plan: Lucerne museum visit (weather dependent)</span>
+          </td>
+          <td class="loc">Lucerne</td>
+          <td>18</td>
+          <td><span class="badge b-not">● Not sent</span></td>
+          <td><span class="muted">—</span></td>
+          <td><button class="btn primary" style="padding:4px 10px">Send request</button></td>
+          <td><span class="muted note">Locked — no request sent yet</span></td>
+          <td class="deadline-cell soon"><div class="d">Jun 1 ⚠</div><div class="stamp">2 days left</div></td>
+          <td><span class="note">Weather dependent — backup plan set</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day">
+    <div class="day-head">
+      <span class="day-num">3</span>
+      <strong>Day 3 — Monday, June 17, 2024</strong>
+      <span class="dh-sub">2 active · 1 cancelled</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th><th>Supplier / Activity</th><th>Location</th><th>PAX</th>
+          <th>Status</th><th>Confirmation</th><th>Request</th><th>Response</th><th>Cancel by</th><th>Log / Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="time">09:00</td>
+          <td>
+            <div class="muted" style="font-size:12px">Lucerne Guides</div>
+            <div class="act-name">Guided City Walking Tour</div>
+            <div class="act-desc">Historical tour incl. Chapel Bridge</div>
+          </td>
+          <td class="loc">Lucerne City Center</td>
+          <td>18</td>
+          <td><span class="badge b-pend">● Pending</span></td>
+          <td><span class="muted">—</span></td>
+          <td><span class="muted">Sent</span><div class="stamp">Apr 13, 10:00</div></td>
+          <td><span class="muted note">Awaiting reply · 14 days</span></td>
+          <td class="deadline-cell ok"><div class="d">Jun 12</div></td>
+          <td><span class="log">💬 1 message</span> <span class="link">· Send follow-up</span></td>
+        </tr>
+        <tr>
+          <td class="time">12:30</td>
+          <td>
+            <div class="muted" style="font-size:12px">Restaurant Rigi</div>
+            <div class="act-name">Lunch at Lakeside Restaurant</div>
+            <div class="act-desc">Traditional Swiss cuisine with lake views</div>
+          </td>
+          <td class="loc">Lake Lucerne</td>
+          <td>18</td>
+          <!-- FIX: confirmed requires a confirmation ref + tracked response -->
+          <td><span class="badge b-pend">● Pending</span><div class="stamp" style="color:var(--red)">can't confirm without ref</div></td>
+          <td><span class="muted">— required</span></td>
+          <td><button class="btn" style="padding:4px 10px">Send request</button></td>
+          <td><span class="link">Add response</span></td>
+          <td class="deadline-cell ok"><div class="d">Jun 14</div></td>
+          <td><span class="note">—</span></td>
+        </tr>
+        <!-- FIX: cancelled visually separated, excluded from counts, deadline-compliance noted -->
+        <tr class="cancelled">
+          <td class="time">15:00</td>
+          <td>
+            <div class="muted" style="font-size:12px">Lake Lucerne Navigation</div>
+            <div class="act-name">Lake Lucerne Boat Cruise</div>
+            <div class="act-desc cancel-note">Cancelled May 21 — within free window, no fee</div>
+          </td>
+          <td class="loc">Lake Lucerne</td>
+          <td>—</td>
+          <td><span class="badge b-canc">● Cancelled</span></td>
+          <td><span class="ref">LLN-2024-0617</span></td>
+          <td><span class="muted">Sent Apr 10</span></td>
+          <td><span class="muted">May 21, 16:30</span></td>
+          <td class="deadline-cell"><div class="d">—</div></td>
+          <td><span class="note">Excluded from confirmation count</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="legend-key">
+    <span><strong>What's new vs. the original:</strong></span>
+    <span>① Tour-level confirmation overview + progress</span>
+    <span>② Deadline / chase / pax alerts</span>
+    <span>③ Needs-action filter</span>
+    <span>④ Status state-machine (impossible states blocked)</span>
+    <span>⑤ Per-activity message log</span>
+    <span>⑥ PAX re-confirmation flags</span>
+    <span>⑦ Cancel-by tracking</span>
+    <span>⑧ Cancelled rows separated</span>
+    <span>⑨ Contingency / backup field</span>
+  </div>
+
+  <div class="footer">Mockup — Vaylo tour program. Static demo, no live data.</div>
+</div>
+</body>
+</html>
